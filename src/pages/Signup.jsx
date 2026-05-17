@@ -30,7 +30,7 @@ let Signup = () => {
 
 
      if(valid){
-       let api="http://127.0.0.1:8000/api/users/"
+       let api="https://makemytrip-back-end.onrender.com/api/users/"
       axios.post(api, { name: form.name, contact: form.contact, email: form.email, password: form.password }).then((res)=>{
 
         alert("Signup successful!");

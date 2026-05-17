@@ -78,7 +78,7 @@ const Airlins = () => {
 
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/api/company/",{
+        "https://makemytrip-back-end.onrender.com/api/company/",{
           ...companyForm,
           useremail: localStorage.getItem("newUserEmail") || "",
         },
@@ -126,7 +126,7 @@ const Airlins = () => {
   try {
 
     await axios.delete(
-      `http://127.0.0.1:8000/api/company/${id}/`,
+      `https://makemytrip-back-end.onrender.com/api/company/${id}/`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

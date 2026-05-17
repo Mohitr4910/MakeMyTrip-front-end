@@ -39,7 +39,7 @@ function FlightForm() {
     if (isEdit) {
 
       axios.get(
-        `http://127.0.0.1:8000/api/flights/${id}/`,
+        `https://makemytrip-back-end.onrender.com/api/flights/${id}/`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
@@ -86,7 +86,7 @@ function FlightForm() {
       if (isEdit) {
 
         await axios.put(
-          `http://127.0.0.1:8000/api/flights/${id}/`,
+          `https://makemytrip-back-end.onrender.com/api/flights/${id}/`,
           {
             ...flightData,
             company_email: loggedin
@@ -108,7 +108,7 @@ function FlightForm() {
       else {
 
         await axios.post(
-          "http://127.0.0.1:8000/api/flights/",
+          "https://makemytrip-back-end.onrender.com/api/flights/",
           {
             ...flightData,
             company_email: loggedin

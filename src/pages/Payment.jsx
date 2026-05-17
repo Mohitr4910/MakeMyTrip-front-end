@@ -96,7 +96,7 @@ let Payment = () => {
           // payment status verify
 
           const verifyResponse = await axios.post(
-            "http://127.0.0.1:8000/payment_status/",
+            "https://makemytrip-back-end.onrender.com/payment_status/",
             {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
@@ -113,7 +113,7 @@ let Payment = () => {
             // booking save
 
             const bookingResponse = await axios.post(
-              "http://127.0.0.1:8000/api/bookings/",
+              "https://makemytrip-back-end.onrender.com/api/bookings/",
               {
                 ...bookingData,
                 payment_id: response.razorpay_payment_id

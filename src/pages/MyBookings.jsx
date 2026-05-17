@@ -19,7 +19,7 @@ function MyBooking() {
     try {
 
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/bookings/",
+        "https://makemytrip-back-end.onrender.com/api/bookings/",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

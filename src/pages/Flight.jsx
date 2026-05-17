@@ -60,7 +60,7 @@ let searchFlights = async (e) => {
   try {
 
     let res = await axios.get(
-      `http://127.0.0.1:8000/api/flights/?from=${form.from}&to=${form.to}`,
+      `https://makemytrip-back-end.onrender.com/api/flights/?from=${form.from}&to=${form.to}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

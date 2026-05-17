@@ -13,7 +13,7 @@ let AllFlights = () => {
   const fetchFlights = async () => {
     try {
       let res = await axios.get(
-        "http://127.0.0.1:8000/api/flights/",
+        "https://makemytrip-back-end.onrender.com/api/flights/",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
@@ -39,7 +39,7 @@ let AllFlights = () => {
 
     try {
       await axios.delete(
-        `http://127.0.0.1:8000/api/flights/${id}/`,
+        `https://makemytrip-back-end.onrender.com/api/flights/${id}/`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
