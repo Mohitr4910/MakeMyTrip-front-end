@@ -64,7 +64,7 @@ const Airlins = () => {
       setStep(2); // 👉 NEXT FORM OPEN
     } catch (err) {
       console.log(err.response?.data);
-      alert(err.response?.data?.email || "something went wrong creating user ❌");
+      alert(err.response?.data || "something went wrong creating user ❌");
     }
   };
 
