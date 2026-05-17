@@ -63,7 +63,7 @@ const Airlins = () => {
       localStorage.setItem("newUserEmail", userForm.email); // 👉 store email to link with company form
       setStep(2); // 👉 NEXT FORM OPEN
     } catch (err) {
-      console.log(err.response?.data);
+      console.log(err);
       alert(err.response?.data || "something went wrong creating user ❌");
     }
   };
