@@ -35,6 +35,7 @@ let Signup = () => {
 
         alert("Signup successful!");
         navigate("/login");
+        
       }).catch((err)=>{
         console.log(err.response.data);
         alert("Signup failed! Please try again.");

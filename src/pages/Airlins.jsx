@@ -50,22 +50,27 @@ const Airlins = () => {
     setUserForm({ ...userForm, [e.target.name]: e.target.value });
   };
 
+  let valid=true
   const submitUser = async (e) => {
     e.preventDefault();
+  
+  if(valid){
 
-    try {
-      const res = await axios.post(
-        "https://makemytrip-back-end.onrender.com/api/users/",
-        userForm
-      );
+    const res = await axios.post(
+      "https://makemytrip-back-end.onrender.com/api/users/",
+      userForm
+    ).then((res)=>{
 
-      alert("User Created ✅ Now create company");
-      localStorage.setItem("newUserEmail", userForm.email); // 👉 store email to link with company form
-      setStep(2); // 👉 NEXT FORM OPEN
-    } catch (err) {
-      console.log(err);
-      alert(err.response?.data || "something went wrong creating user ❌");
-    }
+      
+            alert("User Created ✅ Now create company");
+            localStorage.setItem("newUserEmail", userForm.email); // 👉 store email to link with company form
+            setStep(2); // 👉 NEXT FORM OPEN
+            
+    }).catch ((err) =>{
+    console.log(err);
+    alert(err.response?.data || "something went wrong creating user ❌");
+  })
+  }
   };
 
   // ---------------- COMPANY FORM ----------------
