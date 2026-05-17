@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/",
+  baseURL: "https://makemytrip-back-end.onrender.com/api/",
 });
 
 // REQUEST
@@ -65,7 +65,7 @@ axiosInstance.interceptors.response.use(
 
         // refresh request
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/token/refresh/",
+          "https://makemytrip-back-end.onrender.com/api/token/refresh/",
           {
             refresh: refreshToken,
           }
