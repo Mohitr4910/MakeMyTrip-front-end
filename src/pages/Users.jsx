@@ -34,7 +34,7 @@ let User = () => {
   try {
 
     await axios.delete(
-      `http://127.0.0.1:8000/api/users/${id}/`
+      `https://makemytrip-back-end.onrender.com/api/users/${id}/`
     );
 
     setUsers(

@@ -33,7 +33,7 @@ const Airlins = () => {
 
   const getCompanies = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/api/company/", {
+      const res = await axios.get("https://makemytrip-back-end.onrender.com/api/company/", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -55,7 +55,7 @@ const Airlins = () => {
 
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/api/users/",
+        "https://makemytrip-back-end.onrender.com/api/users/",
         userForm
       );
 
