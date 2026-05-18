@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "../Untils/axiosInstance";
+import "./Payment.css";
 
 
 let Payment = () => {
