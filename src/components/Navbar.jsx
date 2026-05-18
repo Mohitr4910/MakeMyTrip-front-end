@@ -38,14 +38,7 @@ const Navbar = () => {
           <Link to="/">TravelGo</Link>
         </div>
 
-        {/* Menu */}
-        <div className="menu">
-          <Link to="/flight">✈️ Flight</Link>
-          <Link to="/train">🚆 Train</Link>
-          <Link to="/bus">🚌 Bus</Link>
-        </div>
 
-        {/* AUTH / PROFILE */}
         <div className="auth">
 
           {loggedIn ? (

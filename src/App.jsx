@@ -26,8 +26,6 @@ function App() {
         <Route path="/" element={<Layout/>}>  
         <Route index element={<Flight />} />
         <Route path="flight" element={<Flight />} />
-        <Route path="train" element={<Train/>} />
-        <Route path="bus" element={<Bus />} />
         <Route path="results" element={<Results/>} />
         </Route>
         
