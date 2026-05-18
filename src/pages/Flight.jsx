@@ -254,14 +254,6 @@ useEffect(() => {
       </div>
     </div>
 
-    <div className="feature-card">
-      <div className="front">
-        <span>🏨</span> <h4>Top Hotels</h4>
-      </div>
-      <div className="back">
-        <p>Choose from luxury to budget hotels with best deals and ratings.</p>
-      </div>
-    </div>
 
     <div className="feature-card">
       <div className="front">
