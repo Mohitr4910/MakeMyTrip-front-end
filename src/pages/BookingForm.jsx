@@ -14,6 +14,7 @@ function BookingForm() {
   const data = JSON.parse(localStorage.getItem("user"));
 
   const email = data?.user?.email;
+       
   const contact = data?.user?.contact;
 
   const [people, setPeople] = useState(1);
@@ -105,6 +106,7 @@ function BookingForm() {
           contact: contact,
         }
       );
+      console.log(totalPrice, email, contact)
 
       navigate("/payment", {
         state: {

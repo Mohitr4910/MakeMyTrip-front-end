@@ -25,6 +25,8 @@ let Results = () => {
     formatToDDMMYYYY(initialDate)
   );
 
+  
+
   let [baseDate, setBaseDate] = useState(
     formatToDDMMYYYY(initialDate)
   );

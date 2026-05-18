@@ -39,6 +39,7 @@ const Navbar = () => {
         </div>
 
 
+
         <div className="auth">
 
           {loggedIn ? (
