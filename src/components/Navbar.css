@@ -62,20 +62,20 @@
 
 .login {
   padding: 8px 16px;
-  border: 1px solid #007bff;
-  color: #007bff;
+  border: 1px solid #474340;
+  color: #ff7a18;
   text-decoration: none;
   border-radius: 6px;
   transition: 0.3s;
 }
 
 .login:hover {
-  background-color: #e6f0ff;
+  background-color: #252a31;
 }
 
 .signup {
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: #ff7a18;
   color: white;
   text-decoration: none;
   border-radius: 6px;
@@ -83,7 +83,7 @@
 }
 
 .signup:hover {
-  background-color: #0056b3;
+  background-color: #121920;
 }
 
 /* PROFILE BUTTON */
