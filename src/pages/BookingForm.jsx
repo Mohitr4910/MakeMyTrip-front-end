@@ -13,9 +13,8 @@ function BookingForm() {
 
   const data = JSON.parse(localStorage.getItem("user"));
 
-  const email = data?.user?.email;
-       
-  const contact = data?.user?.contact;
+const email = data?.email || data?.user?.email;
+const contact = data?.contact || data?.user?.contact || mobileNumber;
 
   const [people, setPeople] = useState(1);
   const [mobileNumber, setMobileNumber] = useState("");
