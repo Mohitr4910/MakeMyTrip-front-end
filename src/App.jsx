@@ -1,9 +1,7 @@
 import React from 'react'
 import {Routes, Route } from "react-router-dom";
 import Layout from './pages/Layout';
-import Train from './pages/Train';
 import Flight from './pages/Flight';
-import Bus from './pages/Bus';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Results from './pages/Results';
