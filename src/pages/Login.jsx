@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import axios from "../Untils/axiosInstance";
-
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
+  const [loading, setLoading] = useState(false); // ⭐ ADDED
 
   const navigate = useNavigate();
 
@@ -17,8 +17,7 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const Submit = (e) => {
-
+  const Submit = async (e) => {
     e.preventDefault();
 
     let email = form.email.trim();
@@ -34,12 +33,16 @@ const Login = () => {
       return;
     }
 
-    axios.post("https://makemytrip-back-end.onrender.com/api/login/", {
-      email: form.email,
-      password: form.password,
-    })
+    try {
+      setLoading(true); // ⭐ START LOADING
 
-    .then((res) => {
+      const res = await axios.post(
+        "https://makemytrip-back-end.onrender.com/api/login/",
+        {
+          email: form.email,
+          password: form.password,
+        }
+      );
 
       console.log(res.data);
 
@@ -52,32 +55,19 @@ const Login = () => {
 
       const user = res.data.user;
 
-      console.log("Superuser:", user?.is_superuser);
-
       if (user?.is_superuser) {
-
         navigate("/admin-dashboard");
-
       } else if (res.data.role === "company") {
-
         navigate("/airline-dashboard");
-
       } else {
-
         navigate("/");
-
       }
-
-    })
-
-    .catch((err) => {
-
+    } catch (err) {
       console.log(err.response?.data);
-
       alert(err.response?.data?.message || "Login failed ❌");
-
-    });
-
+    } finally {
+      setLoading(false); // ⭐ STOP LOADING
+    }
   };
 
   return (
@@ -103,13 +93,28 @@ const Login = () => {
           onChange={handleChange}
         />
 
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+
+        {/* ⭐ SIGNUP NAVIGATION BUTTON */}
+        <p className="signup-text">
+          Don’t have an account?{" "}
+          <span
+            onClick={() => navigate("/signup")}
+            style={{
+              color: "#007bff",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            Sign Up
+          </span>
+        </p>
 
       </form>
-
     </div>
   );
-
 };
 
 export default Login;

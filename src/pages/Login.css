@@ -1,48 +1,111 @@
 .login-container {
+  height: 100vh;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: #f2f2f2;
+
+  background: linear-gradient(135deg, #e0f2ff, #f7faff);
+  font-family: "Segoe UI", sans-serif;
 }
 
+/* FORM CARD */
 .login-form {
+  width: 360px;
   background: #ffffff;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  padding: 35px 30px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
+/* TITLE */
 .login-form h2 {
   text-align: center;
-  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 10px;
 }
 
+/* INPUTS */
 .login-form input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
 }
 
+.login-form input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+/* BUTTON */
 .login-form button {
-  width: 100%;
-  padding: 10px;
-  background:grey;
-  color: #fff;
+  padding: 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  background: #007bff;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .login-form button:hover {
-  background: #0056b3;
+  background: #0056d2;
 }
 
-.error {
-  color: red;
-  font-size: 12px;
-  margin: 0;
+/* DISABLED BUTTON */
+.login-form button:disabled {
+  background: #7fb3ff;
+  cursor: not-allowed;
+}
+
+/* SIGNUP TEXT */
+.signup-text {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  margin-top: 5px;
+}
+
+.signup-text span {
+  color: #007bff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.signup-text span:hover {
+  text-decoration: underline;
+}
+
+.login-form button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+
+  background: #ff6b00;   /* 🔥 NEW COLOR (orange travel vibe) */
+  color: white;
+
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-form button:hover {
+  background: #e85f00;   /* darker orange on hover */
+  transform: translateY(-1px);
+}
+
+.login-form button:active {
+  transform: scale(0.98);
 }

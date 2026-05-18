@@ -8,25 +8,40 @@ let Results = () => {
   let flights = location.state?.flights || [];
   let initialDate = location.state?.selectdate || "";
 
-  // ✅ convert date to DD-MM-YYYY
+  const [loading, setLoading] = useState(true); // ⭐ ADDED
+
   const formatToDDMMYYYY = (dateStr) => {
     if (!dateStr) return "";
 
     let parts = dateStr.split("-");
 
     if (parts[0].length === 4) {
-      return `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD → DD-MM-YYYY
+      return `${parts[2]}-${parts[1]}-${parts[0]}`;
     }
     return dateStr;
   };
 
   let [selectedDate, setSelectedDate] = useState(
-    formatToDDMMYYYY(initialDate));
-  let [baseDate, setBaseDate] = useState(formatToDDMMYYYY(initialDate));
+    formatToDDMMYYYY(initialDate)
+  );
+
+  let [baseDate, setBaseDate] = useState(
+    formatToDDMMYYYY(initialDate)
+  );
 
   let [filteredFlights, setFilteredFlights] = useState([]);
 
-  // ✅ generate next 5 dates
+  // ⭐ LOADING CONTROL
+  useEffect(() => {
+    setLoading(true);
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 300); // small delay for smooth UI
+
+    return () => clearTimeout(timer);
+  }, [flights, selectedDate]);
+
   let getNextDates = (startDate) => {
     if (!startDate) return [];
 
@@ -53,7 +68,7 @@ let Results = () => {
 
   let dates = getNextDates(baseDate);
 
-  // ✅ filter flights properly
+  // FILTER
   useEffect(() => {
     if (!selectedDate) return;
 
@@ -65,100 +80,96 @@ let Results = () => {
     setFilteredFlights(result);
   }, [selectedDate, flights]);
 
-  // ✅ first load fix (agar selectedDate empty ho)
+  // FIRST LOAD FIX
   useEffect(() => {
     if (!selectedDate && flights.length > 0) {
       setSelectedDate(formatToDDMMYYYY(flights[0].date));
     }
   }, [flights]);
 
+  // ---------------- LOADING UI ----------------
+  if (loading) {
+    return (
+      <div className="loading">
+        Searching Flights...
+      </div>
+    );
+  }
+
   return (
-    <>
-      <div className="container">
-        <h1>
-          {flights[0]?.from} to {flights[0]?.to} Flights
-        </h1>
+    <div className="container">
 
-        <p className="subtitle">
-          {flights.length} Flights found between {flights[0]?.from} (
-          {flights[0]?.fromCode}) to {flights[0]?.to} (
-          {flights[0]?.toCode})
-        </p>
+      <h1>
+        {flights[0]?.from} to {flights[0]?.to} Flights
+      </h1>
 
-        <div className="date-tabs">
-          {dates.map((date, i) => (
-            <div
-              key={i}
-              className={`tab ${selectedDate === date ? "active" : ""}`}
-              onClick={() => setSelectedDate(date)}
-            >
-              <p>{date}</p>
-              <span>• Few Seats</span>
-            </div>
-          ))}
-        </div>
+      <p className="subtitle">
+        {flights.length} Flights found
+      </p>
 
-        <div className="filters">
-          <h3>Quick Filters</h3>
-        </div>
+      {/* DATE TABS */}
+      <div className="date-tabs">
+        {dates.map((date, i) => (
+          <div
+            key={i}
+            className={`tab ${selectedDate === date ? "active" : ""}`}
+            onClick={() => setSelectedDate(date)}
+          >
+            <p>{date}</p>
+            <span>• Available</span>
+          </div>
+        ))}
+      </div>
 
-        <div className="offer">
-          <p>Get a full train fare refund</p>
-          <span>₹0 cancellation fee</span>
-        </div>
+      {/* FILTERS */}
+      <div className="filters">
+        <h3>Quick Filters</h3>
+      </div>
 
-        {/* Flight List */}
-        {filteredFlights.length > 0 ? (
-          filteredFlights.map((flight, index) => (
+      {/* OFFERS */}
+      <div className="offer">
+        <p>Get instant booking confirmation</p>
+        <span>Free cancellation available</span>
+      </div>
 
-            <Link
-      to="/book"
-      state={{ flight }}
-      key={index}
-      style={{ textDecoration: "none", color: "inherit" }}
-    >
+      {/* FLIGHTS */}
+      {filteredFlights.length > 0 ? (
+        filteredFlights.map((flight, index) => (
+          <Link
+            to="/book"
+            state={{ flight }}
+            key={index}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
             <div className="train-card">
+
               <div className="train-header">
                 <h3>{flight.name}</h3>
                 <span className="rating">⭐ 4.0</span>
               </div>
 
               <div className="train-time">
-                <strong>{flight.departuretime || "00:20"}</strong>
+                <strong>{flight.departuretime}</strong>
                 <span> → </span>
-                <strong>{flight.arrivaltime || "02:35"}</strong>
-                <p>-------</p>
+                <strong>{flight.arrivaltime}</strong>
               </div>
 
               <div className="seats">
                 <div className="seat-box">
                   <p>SL</p>
-                  <span>₹605</span>
-                  <small>Not Available</small>
-                </div>
-
-                <div className="seat-box">
-                  <p>3E</p>
-                  <span>₹1525</span>
-                  <small>Not Available</small>
-                </div>
-
-                <div className="seat-box">
-                  <p>3A</p>
-                  <span>₹2100</span>
-                  <small>Few Seats</small>
+                  <span>₹{flight.price}</span>
+                  <small>Available</small>
                 </div>
               </div>
+
             </div>
-        </Link>
-          ))
-        ) : (
-          <p className="no-results">
-            No flights found .
-          </p>
-        )}
-      </div>
-    </>
+          </Link>
+        ))
+      ) : (
+        <p className="no-results">No flights found.</p>
+      )}
+
+    </div>
   );
 };
 

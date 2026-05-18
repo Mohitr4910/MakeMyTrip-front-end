@@ -102,3 +102,25 @@ body {
 .seat-box small {
   color: red;
 }
+
+.loading {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+  background: linear-gradient(135deg, #f5f7fa, #e4ecf7);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.loading::after {
+  content: "";
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0,0,0,0.1);
+  border-top: 5px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}

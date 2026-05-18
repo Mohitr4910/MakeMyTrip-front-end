@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "../Untils/axiosInstance";
-
 import "./AllFlights.css";
 
 let AllFlights = () => {
   const [flights, setFlights] = useState([]);
+  const [loading, setLoading] = useState(true); // ⭐ ADDED
 
   useEffect(() => {
     fetchFlights();
@@ -12,13 +12,13 @@ let AllFlights = () => {
 
   const fetchFlights = async () => {
     try {
+      setLoading(true); // ⭐ IMPORTANT FIX
+
       let res = await axios.get(
         "https://makemytrip-back-end.onrender.com/api/flights/",
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              "accessToken"
-            )}`,
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         }
       );
@@ -26,6 +26,8 @@ let AllFlights = () => {
       setFlights(res.data);
     } catch (err) {
       console.log("error", err.response?.data);
+    } finally {
+      setLoading(false); // ⭐ ALWAYS STOP LOADING
     }
   };
 
@@ -38,18 +40,17 @@ let AllFlights = () => {
     if (!confirmDelete) return;
 
     try {
+      setLoading(true); // ⭐ optional UX improvement
+
       await axios.delete(
         `https://makemytrip-back-end.onrender.com/api/flights/${id}/`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              "accessToken"
-            )}`,
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         }
       );
 
-      // remove deleted flight instantly from UI
       setFlights((prevFlights) =>
         prevFlights.filter((flight) => flight.id !== id)
       );
@@ -57,8 +58,19 @@ let AllFlights = () => {
     } catch (err) {
       console.log("Delete Error", err.response?.data);
       alert("Failed To Delete Flight");
+    } finally {
+      setLoading(false);
     }
   };
+
+  // ---------------- LOADING UI ----------------
+  if (loading) {
+    return (
+      <div className="loading">
+        Loading Flights...
+      </div>
+    );
+  }
 
   return (
     <div className="allflights-page">

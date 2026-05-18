@@ -4,61 +4,73 @@ import "./AllFlights.css";
 
 let User = () => {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true); // ⭐ ADDED
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        let res = await axios.get(
-          "https://makemytrip-back-end.onrender.com/api/users/",
-        );
-
-        setUsers(res.data);
-      } catch (err) {
-        console.log("error", err.response?.data);
-      }
-    };
-
     fetchUsers();
   }, []);
-    console.log("All Users:", users);
 
+  const fetchUsers = async () => {
+    try {
+      setLoading(true); // ⭐ START LOADING
 
-    const deleteUser = async (id) => {
+      let res = await axios.get(
+        "https://makemytrip-back-end.onrender.com/api/users/"
+      );
 
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete user?"
-  );
+      setUsers(res.data);
+    } catch (err) {
+      console.log("error", err.response?.data);
+    } finally {
+      setLoading(false); // ⭐ STOP LOADING
+    }
+  };
 
-  if (!confirmDelete) return;
-
-  try {
-
-    await axios.delete(
-      `https://makemytrip-back-end.onrender.com/api/users/${id}/`
+  const deleteUser = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete user?"
     );
 
-    setUsers(
-      users.filter(
-        (user) => user.id !== id
-      )
+    if (!confirmDelete) return;
+
+    try {
+      setLoading(true); // ⭐ optional UX improvement
+
+      await axios.delete(
+        `https://makemytrip-back-end.onrender.com/api/users/${id}/`
+      );
+
+      setUsers((prev) =>
+        prev.filter((user) => user.id !== id)
+      );
+
+    } catch (error) {
+      console.log(error);
+      alert("Cannot Delete User ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ---------------- LOADING UI ----------------
+  if (loading) {
+    return (
+      <div className="loading">
+        Loading Users...
+      </div>
     );
-
-  } catch (error) {
-
-    console.log(error);
-
-    alert("Cannot Delete User ❌");
   }
-};
 
   return (
     <div className="allflights-page">
+
       <div className="flights-header">
         <h1>✈ All Users</h1>
         <p>Manage and view all available users</p>
       </div>
 
       <div className="flights-container">
+
         <table>
           <thead>
             <tr>
@@ -83,9 +95,12 @@ let User = () => {
                   <td>{user.last_login_ist}</td>
                   <td>{user.role}</td>
                   <td>
-                      <button className="btn btn-danger" onClick={() => deleteUser(user.id)}>
-                        Delete
-                      </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => deleteUser(user.id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))
@@ -97,7 +112,9 @@ let User = () => {
               </tr>
             )}
           </tbody>
+
         </table>
+
       </div>
     </div>
   );

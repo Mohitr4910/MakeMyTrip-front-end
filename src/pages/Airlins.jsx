@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./Airlins.css";
-// import axios from "axios";
 import axios from "../Untils/axiosInstance";
+
 const Airlins = () => {
   const [companies, setCompanies] = useState([]);
   const [showForm, setShowForm] = useState(false);
 
-  // STEP CONTROL 👇
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [formLoading, setFormLoading] = useState(false); // ⭐ NEW (form API loading)
 
   // FORM 1 (USER)
   const [userForm, setUserForm] = useState({
@@ -25,52 +26,56 @@ const Airlins = () => {
     address: "",
   });
 
-    console.log("User Form: ", userForm);
-    console.log("Company Form: ", companyForm);
   useEffect(() => {
     getCompanies();
   }, []);
 
+  // ---------------- GET COMPANIES ----------------
   const getCompanies = async () => {
     try {
-      const res = await axios.get("https://makemytrip-back-end.onrender.com/api/company/", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      });
+      setLoading(true); // ⭐ FIX (always reset loading before API)
+      const res = await axios.get(
+        "https://makemytrip-back-end.onrender.com/api/company/",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
       setCompanies(res.data);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   // ---------------- USER FORM ----------------
   const handleUserChange = (e) => {
     setUserForm({ ...userForm, [e.target.name]: e.target.value });
   };
 
-  let valid=true
   const submitUser = async (e) => {
     e.preventDefault();
-  
-  if(valid){
 
-    const res = await axios.post(
-      "https://makemytrip-back-end.onrender.com/api/users/",
-      userForm
-    ).then((res)=>{
+    try {
+      setFormLoading(true); // ⭐ NEW
 
-      
-            alert("User Created ✅ Now create company");
-            localStorage.setItem("newUserEmail", userForm.email); // 👉 store email to link with company form
-            setStep(2); // 👉 NEXT FORM OPEN
-            
-    }).catch ((err) =>{
-    console.log(err);
-    alert(err.response?.data || "something went wrong creating user ❌");
-  })
-  }
+      await axios.post(
+        "https://makemytrip-back-end.onrender.com/api/users/",
+        userForm
+      );
+
+      alert("User Created ✅ Now create company");
+      localStorage.setItem("newUserEmail", userForm.email);
+      setStep(2);
+    } catch (err) {
+      console.log(err);
+      alert(err.response?.data || "Something went wrong creating user ❌");
+    } finally {
+      setFormLoading(false); // ⭐ NEW
+    }
   };
 
   // ---------------- COMPANY FORM ----------------
@@ -82,11 +87,14 @@ const Airlins = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "https://makemytrip-back-end.onrender.com/api/company/",{
+      setFormLoading(true); // ⭐ NEW
+
+      await axios.post(
+        "https://makemytrip-back-end.onrender.com/api/company/",
+        {
           ...companyForm,
           useremail: localStorage.getItem("newUserEmail") || "",
-        },
+        }
       );
 
       alert("Company Created ✅");
@@ -94,7 +102,6 @@ const Airlins = () => {
       setShowForm(false);
       setStep(1);
 
-      // reset both forms
       setUserForm({
         name: "",
         email: "",
@@ -107,51 +114,54 @@ const Airlins = () => {
         company_code: "",
         country: "",
         address: "",
-        useremail: localStorage.getItem("newUserEmail") || "", // 👉 pre-fill email for convenience
       });
 
       getCompanies();
     } catch (err) {
       console.log(err.response?.data);
       alert(err.response?.data || "Error creating company ❌");
-
+    } finally {
+      setFormLoading(false); // ⭐ NEW
     }
   };
 
-
-
+  // ---------------- DELETE COMPANY ----------------
   const cancelBooking = async (id) => {
-
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete company?"
-  );
-
-  if (!confirmDelete) return;
-
-  try {
-
-    await axios.delete(
-      `https://makemytrip-back-end.onrender.com/api/company/${id}/`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      }
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete company?"
     );
 
-    setCompanies(
-      companies.filter(
-        (company) => company.id !== id
-      )
-    );
+    if (!confirmDelete) return;
 
-  } catch (error) {
+    try {
+      setLoading(true); // ⭐ optional UX improvement
 
-    console.log(error);
+      await axios.delete(
+        `https://makemytrip-back-end.onrender.com/api/company/${id}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
 
-    alert("Cannot Delete Company");
+      setCompanies((prev) =>
+        prev.filter((company) => company.id !== id)
+      );
+
+    } catch (error) {
+      console.log(error);
+      alert("Cannot Delete Company");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ---------------- LOADING UI ----------------
+  if (loading) {
+    return <h1 className="loading">Loading...</h1>;
   }
-};
+
   return (
     <>
       <div className="airlines-page">
@@ -161,7 +171,10 @@ const Airlins = () => {
             <p>Manage all airlines from dashboard</p>
           </div>
 
-          <button className="add-airline-btn" onClick={() => setShowForm(true)}>
+          <button
+            className="add-airline-btn"
+            onClick={() => setShowForm(true)}
+          >
             + Add Airline
           </button>
         </div>
@@ -186,11 +199,14 @@ const Airlins = () => {
                   <td>✈ {c.company_code}</td>
                   <td>{c.country}</td>
                   <td>{c.status || "Active"}</td>
-                    <td>
-                  <button className="delete-btn" onClick={() => cancelBooking(c.id)}>
-                    Delete
-                  </button>
-            </td>
+                  <td>
+                    <button
+                      className="delete-btn"
+                      onClick={() => cancelBooking(c.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -203,7 +219,7 @@ const Airlins = () => {
         <div className="form-container">
           <div className="modal-box">
 
-            {/* STEP INDICATOR */}
+            {/* STEP BAR */}
             <div className="step-bar">
               <div className={step === 1 ? "active-step" : ""}>User</div>
               <div className={step === 2 ? "active-step" : ""}>Company</div>
@@ -214,12 +230,14 @@ const Airlins = () => {
               <form onSubmit={submitUser} className="form">
                 <h2>Create User</h2>
 
-                <input name="name" placeholder="Name" onChange={handleUserChange}  required/>
+                <input name="name" placeholder="Name" onChange={handleUserChange} required />
                 <input name="email" placeholder="Email" onChange={handleUserChange} required />
-                <input name="contact" placeholder="Contact" onChange={handleUserChange}  required />
-                <input name="password" placeholder="Login Code" type="password" onChange={handleUserChange} required />
+                <input name="contact" placeholder="Contact" onChange={handleUserChange} required />
+                <input name="password" type="password" placeholder="Login Code" onChange={handleUserChange} required />
 
-                <button type="submit">Next ➜</button>
+                <button type="submit" disabled={formLoading}>
+                  {formLoading ? "Creating..." : "Next ➜"}
+                </button>
               </form>
             )}
 
@@ -228,29 +246,13 @@ const Airlins = () => {
               <form onSubmit={submitCompany} className="form">
                 <h2>Create Company</h2>
 
-                <input
-                  name="company_code"
-                  placeholder="Company Code"
-                  onChange={handleCompanyChange}
-                  required
-                />
+                <input name="company_code" placeholder="Company Code" onChange={handleCompanyChange} required />
+                <input name="country" placeholder="Country" onChange={handleCompanyChange} required />
+                <textarea name="address" placeholder="Address" onChange={handleCompanyChange} required />
 
-                <input
-                  name="country"
-                  placeholder="Country"
-                  onChange={handleCompanyChange}
-                  required
-                />
-
-                <textarea
-                  name="address"
-                  placeholder="Address"
-                  onChange={handleCompanyChange}
-                  required
-                />
-
-
-                <button type="submit">Create Company 🚀</button>
+                <button type="submit" disabled={formLoading}>
+                  {formLoading ? "Creating..." : "Create Company 🚀"}
+                </button>
               </form>
             )}
 
