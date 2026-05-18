@@ -32,7 +32,6 @@ const Login = () => {
       alert("Please enter a valid email!");
       return;
     }
-
     try {
       setLoading(true); // ⭐ START LOADING
 
@@ -47,11 +46,12 @@ const Login = () => {
       console.log(res.data);
 
       alert("Login Successful ✅");
-
+    const user = res.data.user || res.data;
+      
       localStorage.setItem("accessToken", res.data.access);
       localStorage.setItem("refreshToken", res.data.refresh);
       localStorage.setItem("role", res.data.role);
-      localStorage.setItem("user", JSON.stringify(res.data));
+      localStorage.setItem("user", JSON.stringify(user));
 
       const user = res.data.user;
 
