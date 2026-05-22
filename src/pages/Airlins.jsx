@@ -33,7 +33,7 @@ const Airlins = () => {
   // ---------------- GET COMPANIES ----------------
   const getCompanies = async () => {
     try {
-      setLoading(true); // ⭐ FIX (always reset loading before API)
+      setLoading(true);
       const res = await axios.get(
         "https://makemytrip-back-end.onrender.com/api/company/",
         {

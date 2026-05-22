@@ -65,7 +65,8 @@ const Login = () => {
     } catch (err) {
       console.log(err.response?.data);
       alert(err.response?.data?.message || "Login failed ❌");
-    } finally {
+    }
+     finally {
       setLoading(false); // ⭐ STOP LOADING
     }
   };
